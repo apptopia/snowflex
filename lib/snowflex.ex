@@ -52,13 +52,13 @@ defmodule Snowflex do
   end
 
   defp process_results({:selected, headers, rows}) do
-    bin_headers =
+    atom_headers =
       headers
-      |> Enum.map(fn header -> header |> to_string() |> String.downcase() end)
+      |> Enum.map(fn header -> header |> to_string() |> String.downcase() |> String.to_atom() end)
       |> Enum.with_index()
 
-    Enum.map(rows, fn row ->
-      Enum.reduce(bin_headers, %{}, fn {col, index}, map ->
+    Stream.map(rows, fn row ->
+      Enum.reduce(atom_headers, %{}, fn {col, index}, map ->
         data =
           row
           |> elem(index)
